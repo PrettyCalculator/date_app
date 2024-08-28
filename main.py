@@ -7,7 +7,7 @@ from telebot import types
 
 @botTimeWeb.message_handler(commands=['start'])
 def startBot(message):
-    first_mess = f"<b>{message.from_user.first_name}</b>, привет!\nХочешь создать анкету?"
+    first_mess = f"{message.chat.id}, привет!\nХочешь создать анкету?"
     markup = types.InlineKeyboardMarkup()
     button_yes = types.InlineKeyboardButton(text='Да', callback_data='yes')
     markup.add(button_yes)
