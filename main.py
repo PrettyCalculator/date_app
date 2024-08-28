@@ -1,8 +1,8 @@
 import telebot
+import sqlite3
+from telebot import types
 
 botTimeWeb = telebot.TeleBot('7299910315:AAFTVVuX0YHh-SIHlP-33R1YzAXYbepuUBA')
-
-from telebot import types
 
 
 @botTimeWeb.message_handler(commands=['start'])
