@@ -1,28 +1,38 @@
 import telebot
 
-botTimeWeb = telebot.TeleBot('7299910315:AAFTVVuX0YHh-SIHlP-33R1YzAXYbepuUBA')
+bot = telebot.TeleBot('7299910315:AAFTVVuX0YHh-SIHlP-33R1YzAXYbepuUBA')
 
 from telebot import types
 
 
-@botTimeWeb.message_handler(commands=['start'])
+@bot.message_handler(commands=['start'])
 def startBot(message):
-    first_mess = f"{message.chat.id}, привет!\nХочешь создать анкету?"
-    markup = types.InlineKeyboardMarkup()
+    first_mess = f"{message.from_user.first_name}, привет!\nХочешь создать анкету?"
+    markup = types.InlineKeyboardMarkup(row_width=1)
     button_yes = types.InlineKeyboardButton(text='Да', callback_data='yes')
     markup.add(button_yes)
-    botTimeWeb.send_message(message.chat.id, first_mess, parse_mode='html', reply_markup=markup)
+    bot.send_message(message.chat.id, first_mess, parse_mode='html', reply_markup=markup)
 
 
-@botTimeWeb.callback_query_handler(func=lambda call: True)
-def response(function_call):
-    if function_call.message:
-        if function_call.data == "yes":
-            second_mess = "Но тебе сначала надо пройти 2 курса на этом сайте!"
-            markup = types.InlineKeyboardMarkup()
-            markup.add(types.InlineKeyboardButton("Перейти на сайт", url="https://lyceum.yandex.ru/"))
-            botTimeWeb.send_message(function_call.message.chat.id, second_mess, reply_markup=markup)
-            botTimeWeb.answer_callback_query(function_call.id)
+@bot.callback_query_handler(func=lambda call: True)
+def response(call):
+    if call.data == 'yes':
+        bot.send_message(call.message.chat.id, 'Как тебя зовут?')
 
 
-botTimeWeb.infinity_polling()
+num = 0
+
+
+@bot.message_handler(content_types=['text'])
+def get_info(message):
+    global num
+    word = message.text.strip().lower()
+    print(word)
+    num += 1
+    if num == 1:
+        bot.send_message(message.chat.id, 'Сколько тебе лет?')
+    elif num == 2:
+        bot.send_message(message.chat.id, 'Расскажи о себе')
+
+
+bot.polling(none_stop=True)
